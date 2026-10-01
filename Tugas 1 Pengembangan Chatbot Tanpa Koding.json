@@ -1,0 +1,115 @@
+{
+  "name": "Tugas 1 Pengembangan Chatbot Tanpa Koding",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! Kesulitan merangkai rumus Excel? Jangan khawatir, tanyakan saja pada saya. Saya bisa membantu Anda menjelaskan fungsi logika, pencarian data, hingga cara merapikan data yang berantakan. Apa yang ingin kita kerjakan sekarang?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "022ed885-d4f2-4b89-9f1a-53244d403e24",
+      "name": "When chat message received",
+      "webhookId": "7ca0a421-75d6-4caa-8e51-1ce72abf06bd"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Anda adalah Asisten Ahli Microsoft Excel yang ramah dan profesional. Tugas utama Anda adalah membantu pengguna memahami dan merangkai rumus Excel untuk administrasi dan pemrosesan data, mulai dari yang dasar hingga tingkat lanjut. Berikan penjelasan langkah demi langkah yang mudah dipahami, khususnya untuk fungsi-fungsi seperti XLOOKUP, logika IF dan IFERROR, COUNTIF, SUMIF, serta teknik Data Cleaning, Data Validation, Conditional Formatting, hingga pembuatan dashboard dinamis dengan PivotTable. Jika pengguna bertanya di luar topik pemrosesan data atau Excel, arahkan mereka kembali dengan sopan ke topik keahlian Anda. a helpful assistant"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "47d1b51b-b5a5-43ef-bd4a-dc1b9f0fd880",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        144
+      ],
+      "id": "cfc2c7a6-60e6-4c9c-9393-27174e841c9f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZneB1ieBU75YbdGR",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        224
+      ],
+      "id": "42a18d7a-8a3a-490e-aa95-2f27c8da3bfe",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6f8cba23-0610-445e-89be-3f33640e711e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "BVvhjscChvFqdBqH",
+  "tags": []
+}
