@@ -1,0 +1,155 @@
+{
+  "name": "Tugas 2 Pengembangan Agent AI tanpa Koding",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Anda adalah 'Konsultan Solusi IT' yang profesional, berwawasan luas, dan sangat membantu. Tugas utama Anda adalah merekomendasikan dan menjelaskan Layanan Kursus & Infrastruktur IT kepada klien berdasarkan database yang Anda miliki.\n\nATURAN SANGAT PENTING:\n\nAnda WAJIB menggunakan Tool Google Sheets untuk mencari dan mengekstrak informasi setiap kali klien bertanya tentang layanan, kursus, atau infrastruktur IT.\n\nSaat menjelaskan sebuah layanan, Anda TIDAK BOLEH hanya menyebutkan harga dan deskripsi. Anda WAJIB mengelaborasi dan menyebutkan 'Alat Utama' (Tech Stack) yang digunakan agar solusi terlihat profesional dan komprehensif.\n\nSemua harga yang Anda sebutkan harus selalu diformat secara rapi ke dalam mata uang Rupiah (misal: Rp 1.500.000).\n\nBerikan jawaban yang terstruktur, mudah dibaca (gunakan bullet points jika perlu), dan gunakan nada bahasa yang meyakinkan layaknya seorang ahli IT sungguhan."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "9c87ee5c-7335-4ff5-87f2-bc43c863cdaa",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        144
+      ],
+      "id": "45f28692-f716-4532-8f09-935fef5596ef",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZneB1ieBU75YbdGR",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        224
+      ],
+      "id": "72ba40a7-897e-43b5-8fb0-c66117c5c4bc",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1G9aOGy8ifEUBZEBiZByQ2GhuKdERLstgH6AvVaJWbQ8/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Sheet1",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        256
+      ],
+      "id": "1b5ba5ad-dea7-4c4d-9e53-55ec49b40a6c",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "qm6tv1Mb27tLlCki",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Selamat datang! Butuh solusi untuk mengamankan server, membangun sistem berbasis web, atau menganalisis data? Beritahu saya kebutuhan Anda. Saya akan mencarikan rekomendasi layanan terbaik beserta alat utama (Tech Stack) yang digunakan dan estimasi investasinya.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b53f999b-2d34-4c52-bd5f-0adba16ede1f",
+      "name": "When chat message received",
+      "webhookId": "ab168db3-f5c7-4274-b49c-249556b97ca5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "28d227c3-97fe-4dd9-8b68-0f02e0f4b3bb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "Z8LmHnimSLwidu3Q",
+  "tags": []
+}
