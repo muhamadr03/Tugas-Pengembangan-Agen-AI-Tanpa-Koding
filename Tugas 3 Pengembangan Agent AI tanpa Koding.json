@@ -1,0 +1,193 @@
+{
+  "name": "Tugas 3 Pengembangan Agent AI tanpa Koding",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "PERHATIAN: KAMU WAJIB MENGGUNAKAN TOOL GOOGLE SHEETS UNTUK MENJAWAB SEMUA PERTANYAAN TERKAIT PRODUK, HARGA, ATAU STOK. JANGAN MENJAWAB DARI PENGETAHUANMU SENDIRI.\nKamu adalah asisten virtual yang ramah dan profesional untuk Toko Gadget. Tugasmu adalah memberikan informasi mengenai produk, harga, stok, dan deskripsi kepada pelanggan. Kamu memiliki akses ke database produk melalui tool Google Sheets.\n\nATURAN:\n1. Saat pelanggan bertanya tentang produk, gunakan tool Google Sheets untuk mencari informasinya secara akurat berdasarkan Nama, Kategori, atau ID.\n2. Selalu format harga ke dalam mata uang Rupiah (contoh: Rp 4.500.000).\n3. Jika pelanggan menanyakan produk yang tidak ada di database, sampaikan dengan sopan bahwa produk tersebut saat ini belum tersedia.\n4. Jangan pernah mengarang data (halusinasi) terkait stok atau harga. Selalu gunakan data aktual dari Google Sheets."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "f9aa19c9-317e-42f9-a866-099d6ae7f664",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        176
+      ],
+      "id": "223ee459-f5f7-4c53-b7bf-6d4f76dc7a97",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ZneB1ieBU75YbdGR",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        320,
+        224
+      ],
+      "id": "128d3175-6341-4831-8633-3745076cf82c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! Selamat datang di layanan asisten virtual Toko Gadget. Ada yang bisa saya bantu terkait informasi produk, harga, atau ketersediaan stok hari ini?",
+        "options": {
+          "title": "CS Toko Gadget"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        32,
+        0
+      ],
+      "id": "e739bf30-41ab-4453-8e87-0a3f1fa3539a",
+      "name": "When chat message received",
+      "webhookId": "eac042a7-8969-482a-bc73-f3e4a9e0783a"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1YyNAZEgp8-zgwy75JsjQwPINudT8gAW9vPRGYYeZVt8/edit?usp=sharing",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YyNAZEgp8-zgwy75JsjQwPINudT8gAW9vPRGYYeZVt8/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        432,
+        256
+      ],
+      "id": "f80e35e7-002b-4b4d-9931-b45f3b5ce0c8",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "qm6tv1Mb27tLlCki",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Gunakan tool ini secara wajib untuk mencari tahu harga, stok, dan deskripsi produk di Toko Gadget. Jangan menjawab tanpa menggunakan tool ini."
+    },
+    {
+      "parameters": {
+        "chatId": "6781208152",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        48
+      ],
+      "id": "651b79f4-ad29-4f54-8d7d-51d401b71321",
+      "name": "Send a text message",
+      "webhookId": "9d470f64-6465-418e-900b-8a7d9de86bc7",
+      "credentials": {
+        "telegramApi": {
+          "id": "3wElhPN7S120Bjtr",
+          "name": "Telegram account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "95b34354-2670-4265-960a-065716c1d273",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "Imx78z8SocIn5lEl",
+  "tags": []
+}
