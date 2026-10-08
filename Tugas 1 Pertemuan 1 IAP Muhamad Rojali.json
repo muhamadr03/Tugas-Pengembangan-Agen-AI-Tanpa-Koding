@@ -1,0 +1,102 @@
+{
+  "name": "Tugas 1 Pertemuan 1 IAP Muhamad Rojali",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Pendaftaran Kelas",
+        "formDescription": "Silakan isi form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nama",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Kelas",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "TI01"
+                  },
+                  {
+                    "option": "TI02"
+                  },
+                  {
+                    "option": "TI03"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c75e6796-7cdc-4917-8e35-1baa5f254d3d",
+      "name": "On form submission",
+      "webhookId": "97a532d0-8944-47c6-99a6-9e5a9b277dff"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "=Konfirmasi Pendaftaran - {{ $json.Kelas }}",
+        "message": "=<div style=\"font-family: Arial, sans-serif; color: #333;\">     <h2>Halo {{ $json.Nama }},</h2>     <p>Terima kasih telah mendaftar. Data Anda telah kami rekam untuk pendaftaran <strong>{{ $json.Kelas }}</strong>.</p>     <p>Email ini dikirim secara otomatis oleh sistem n8n.</p> </div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "97dcaf7b-52ff-44c0-9be1-b51dc8eba881",
+      "name": "Send a message",
+      "webhookId": "7ac11e9f-e8f7-4bf4-951a-0286acb3db7b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tRu00y4gDtjf0Lis",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "98f94f46-ab41-4190-994c-7f563e74c2fa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "AWMv0yRH5RyzLAjn",
+  "tags": []
+}
